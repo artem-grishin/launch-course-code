@@ -1,0 +1,9 @@
+
+def is_invalid_number(num):
+    try:
+        float(num)
+    except ValueError:
+        return True
+    return False
+
+principle = input('Enter your loan amount: ')
