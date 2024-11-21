@@ -1,46 +1,66 @@
-def prompt(message):
+import json
+
+# Open the JSON file for reading
+with open('calculator_messages.json', 'r') as file:
+    MESSAGES = json.load(file)
+
+LANG = 'en'    
+def messages(LANG, message):
+    return MESSAGES[LANG][message]
+
+def prompt(key):
+    message = messages(LANG, key)
     print(f"==> {message}")
 
 def invalid_number(number_str):
     try:
-        int(number_str)
+        float(number_str)
     except ValueError:
         return True
 
     return False
 
-prompt('Welcome to Calculator!')
+prompt('welcome')
 
-prompt("What's the first number?")
-number1 = input()
+while True:
 
-while invalid_number(number1):
-    prompt("Hmm... that doesn't look like a valid number.")
+    prompt('ask_first_num')
     number1 = input()
 
-prompt("What's the second number?")
-number2 = input()
+    while invalid_number(number1):
+        prompt('invalid_num')
+        number1 = input()
 
-while invalid_number(number2):
-    prompt("Hmm... that doesn't look like a valid number.")
+    prompt('ask_second_num')
     number2 = input()
 
-prompt("What operation would you like to perform?\n\
-    1) Add 2) Subtract 3) Multiply 4) Divide")
-operation = input()
+    while invalid_number(number2):
+        prompt('invalid_num')
+        number2 = input()
 
-while operation not in ["1", "2", "3", "4"]:
-    prompt("You must choose 1, 2, 3, or 4")
+    prompt('choose_operation')
     operation = input()
 
-match operation:
-    case "1":
-        output = int(number1) + int(number2)
-    case "2":
-        output = int(number1) - int(number2)
-    case "3":
-        output = int(number1) * int(number2)
-    case "4":
-        output = int(number1) / int(number2)
+    while operation not in ["1", "2", "3", "4"]:
+        prompt("must_choose_num")
+        operation = input()
 
-prompt(f"The result is {output}")
+    match operation:
+        case "1":
+            output = float(number1) + float(number2)
+        case "2":
+            output = float(number1) - float(number2)
+        case "3":
+            output = float(number1) * float(number2)
+        case "4":
+            output = float(number1) / float(number2)
+
+    print(f"=> The result is {output:,.2f}")
+
+    prompt('continue?')
+    continue_choice = input()
+    if continue_choice and continue_choice[0].lower() != 'y':
+        break
+    
+print('Goodbye and thank you for using the python calculator program!')
+
