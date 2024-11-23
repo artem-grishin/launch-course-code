@@ -1,0 +1,6 @@
+import random
+
+choices = ['rock', 'paper', 'scissors']
+comp_choice = random.choice(choices)
+
+print(comp_choice)
