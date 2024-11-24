@@ -17,13 +17,15 @@ def valid_input(prompt):
 
 def get_monthly_payment(principle, interest, duration):
     monthly_interest = interest / 12
-    duration *= 12 # loan duration in months
+    Duration *= 12 # loan duration in months
     result = principle * (
         monthly_interest / (1 - (1 + monthly_interest) ** (-duration))
     )
     return result
 
+
 print('Welcome to the Loan Calculator Program.')
+
 
 while True:
 
