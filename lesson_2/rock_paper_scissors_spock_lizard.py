@@ -1,32 +1,6 @@
 import random
-import pdb
 
-def prompt(message: str) -> str:
-    print(f'=> {message}')
-
-def get_result(comp_choice: str, user_choice: str) -> str:
-    winner = 'tie'
-    for key, values in choices_dict[comp_choice].items():
-        print(values)
-        if user_choice in values:
-            if key == 'wins_vs':
-                winner = 'Computer'
-            elif key == 'loses_to':
-                winner = 'User'
-    return winner
-
-def display_result(comp_choice: str, user_choice: str, winner: str)-> str:
-
-    prompt(f'Computer chose: {comp_choice}')
-    prompt(f'User chose: {user_choice}')
-
-    if winner != 'tie':
-        prompt(f'The Winner is {winner}!\n')
-    else:
-        prompt(f"It's a {winner}!\n")
-
-
-
+# Declare dictionaries and variables
 
 choices_dict = {
     'rock': {
@@ -61,14 +35,85 @@ choices_dict = {
     },
 }
 
+scores_dict = {
+    'Computer': 0,
+    'User': 0,
+    'tie': 0,
+}
+
+match_count = 0
+# Define functions
+
+def prompt(message: str) -> str:
+    print(f'=> {message}')
+
+def get_match_result(comp_choice: str, user_choice: str) -> str:
+    match_winner = 'tie'
+    for key, value in choices_dict[comp_choice].items():
+        if user_choice in value:
+            if key == 'wins_vs':
+                match_winner = 'Computer'
+            elif key == 'loses_to':
+                match_winner = 'User'
+    return match_winner
+
+def display_match_result(comp_choice: str, user_choice: str, match_winner: str)-> str:
+
+    prompt(f'Computer chose: {comp_choice}')
+    prompt(f'User chose: {user_choice}')
+
+    if match_winner != 'tie':
+        prompt(f'The winner is {match_winner}!\n')
+    else:
+        prompt(f"It's a {match_winner}!\n")
+
+def check_for_grand_winner(scores_dict: dict) -> str:
+
+    comp_score = scores_dict['Computer']
+    user_score = scores_dict['User']
+    
+    if comp_score == 3:
+        grand_winner = 'Computer'
+    elif user_score == 3:
+        grand_winner = 'User'
+    else:
+        grand_winner = ''
+        
+    return grand_winner
+
+def display_final_result(scores_dict, match_count, grand_winner):
+    
+
+
+    print(f'The computer scored {scores_dict['Computer']} win(s).')
+    print(f'The user scored {scores_dict['User']} win(s).')
+    print(f'There were {scores_dict['tie']} ties.\n')
+    
+    if grand_winner and match_count < 5:
+        print(f'\nThe match ended early since 3 wins were reached.\
+        after {match_count} matches.\n\n\
+        The grand winner is {grand_winner}!\n')
+    else:
+        # highest_score = max(scores_dict['Computer'], scores_dict['User'])
+        # grand_winner = ''
+        highest_score = 0
+        for key, value in scores_dict.items():
+            if value > highest_score:
+                highest_score = value
+                grand_winner = key
+                
+        if highest_score == 0:
+            print('The final result is a tie!')
+        else:
+            print(f'After {match_count} matches.\
+            \nThe grand winner is {grand_winner}!.\n')
 
 prompt('Welcome to rock, paper, scissors, lizard, spock!')
 
-match_count = 0
-while match_count <= 5:
+while match_count < 5:
 
     comp_choice = random.choice(list(choices_dict.keys()))
-    
+
     user_choice = prompt('Please choose from: ')
     for item in zip(choices_dict.keys(), choices_dict.values()):
         item_1 = item[0]
@@ -85,19 +130,20 @@ while match_count <= 5:
             break
 
     if name_match:
-        winner = get_result(comp_choice, user_choice)
-        display_result(comp_choice, user_choice, winner)
+        match_winner = get_match_result(comp_choice, user_choice)
+        scores_dict[match_winner] += 1
+
+        display_match_result(comp_choice, user_choice, match_winner)
+        match_count += 1
+
+        if match_count < 5:
+            grand_winner = check_for_grand_winner(scores_dict)
+            if grand_winner != '':
+                break
     else:
         prompt('Incorrect choice, please choose again.')
         continue
 
-    # answer = prompt('Would you like to play again? (y/n): ')
-    # answer = input()
-    
-    # if not answer or answer.lower()[0] == 'n':
-    #     prompt('Thank you for playing. Goodbye!')
-    #     play_again = False
-
-    match_count += 1
-
+print('Final Result:\n-----------------')
+display_final_result(scores_dict, match_count, grand_winner)
 prompt('\n\nGame Over.\nThank you for playing!\n')
